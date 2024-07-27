@@ -1,0 +1,80 @@
+.rjsf {
+  justify-content: center;
+  align-items: center;
+  display: list-item;
+}
+
+.place-form {
+  list-style: none;
+  margin: 0 auto;
+  padding: 1rem;
+  width: 90%;
+  max-width: 60rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+  border-radius: 6px;
+  background: white;
+}
+
+.btn {
+  font: inherit;
+  padding: 0.5rem 1.5rem;
+  border: 1px solid #6836b5;
+  border-radius: 4px;
+  background: #6836b5;
+  color: white;
+  cursor: pointer;
+  margin-right: 1rem;
+  margin-outside: 10rem;
+  text-decoration: none;
+  display: inline-block;
+  align-content: center;
+}
+
+.btn:focus {
+  outline: none;
+}
+
+.btn:hover,
+.btn:active {
+  background: #984bff;
+  border-color: #984bff;
+}
+
+.btn--inverse {
+  background: transparent;
+  color: #6836b5;
+}
+
+.btn--inverse:hover,
+.btn--inverse:active {
+  color: white;
+  background: #6836b5;
+}
+
+.btn--danger {
+  background: #830000;
+  border-color: #830000;
+}
+
+.btn--danger:hover,
+.btn--danger:active {
+  background: #f34343;
+  border-color: #f34343;
+}
+
+.btn:disabled,
+.btn:hover:disabled,
+.btn:active:disabled {
+  background: #ccc;
+  color: #979797;
+  border-color: #ccc;
+  cursor: not-allowed;
+}
+
+.btn--small {
+  font-size: 0.8rem;
+}
+
+.btn--big {
+  font-size: 1.5rem;
+}
