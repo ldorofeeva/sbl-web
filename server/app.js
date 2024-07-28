@@ -2,11 +2,11 @@ const fs = require('fs');
 const path = require('path');
 const express = require('express');
 const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
 const HttpError = require('./models/http-error');
 
-const placesRoutes = require('./routes/places-routes');
 const usersRoutes = require('./routes/users-routes');
+const beersRoutes = require('./routes/beers-routes');
+const batchesRoutes = require('./routes/batches-routes');
 
 const app = express();
 
@@ -25,8 +25,9 @@ app.use((req, res, next)=>{
   next();
 });
 
-app.use('/api/places', placesRoutes); // => /api/places...
 app.use('/api/users', usersRoutes); // => /api/users...
+app.use('/api/beers', beersRoutes); // => /api/users...
+app.use('/api/batches', batchesRoutes); // => /api/users...
 
 app.use((req, res, next) => {
   throw new HttpError('Could not find this route.', 404);
@@ -46,14 +47,4 @@ app.use((error, req, res, next) => {
   res.json({message: error.message || 'An unknown error occurred'})
 });
 
-
-// const url = `mongodb://${process.env.MONGO_URL}/${process.env.MONGO_DB}`;
-const url = 'mongodb://mongo0:27017/sbl';
-console.log(url);
-
-mongoose.connect(url).then(() => {
-  app.listen(`${process.env.APP_PORT}`);
-  console.log('Connected to DB via Mongooooooose')
-}).catch(() => {
-  console.log('Connect failed')
-});
+app.listen(`${process.env.APP_PORT}`);

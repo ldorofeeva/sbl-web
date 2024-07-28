@@ -18,9 +18,7 @@ const MongoClient = require('mongodb').MongoClient;
 const mongoClient = (options) =>
 {
     const uri = `mongodb://${process.env.MONGO_URL}/${process.env.MONGO_DB}`;
-    const client = new MongoClient(uri, options)
-
-    return client
+    return new MongoClient(uri, options)
 }
 
 /**
@@ -264,25 +262,34 @@ const deleteMany = async (collectionName, filter, options) => {
  * @param collectionName case sensitive string of the collection the query should be based around.
  * @param pipeline a list of dictionaries defining the different stages of the aggregation pipeline for your query.
  * @param options dictionary of extra options that can override database defaults.
-)
- * @param dbConnection established client connection to MongoDb.  Method will create the connection automatically if not provided.
  * @returns a list of the returned results based on the provided aggregation pipeline.
  */
-const aggregate = async (collectionName, pipeline, options, dbName, dbConnection) =>
+const aggregate = async (collectionName, pipeline, options) =>
 {
+    // const client = mongoClient()
+    // let result
+    // try {
+    //     await client.connect()
+    //
+    //     const database = client.db(dbName)
+    //     const collection = database.collection(collectionName)
+    //     result = await collection.aggregate(pipeline, options)
+    //
+    // } finally {
+    //     await client.close()
+    // }
+    // return result.toArray()
     const client = mongoClient()
+    await client.connect()
+    const database = client.db()
     let result
     try {
-        await client.connect()
-
-        const database = client.db(dbName || config.Database.database)
-        const collection = database.collection(collectionName)
-        result = await collection.aggregate(pipeline, options)
-
-    } finally {
-        await client.close()
+        result = await database.collection(collectionName).aggregate(pipeline, options).toArray()
+    } catch (e) {
+        console.log(e)
     }
-    return result.toArray()
+    client.close()
+    return result
 }
 
 exports.findOne = findOne;
@@ -292,6 +299,7 @@ exports.insertOne = insertOne;
 exports.updateOne = updateOne;
 
 exports.deleteOne = deleteOne;
+exports.aggregate = aggregate;
 // {
 //     insertMany,
 //     updateMany,

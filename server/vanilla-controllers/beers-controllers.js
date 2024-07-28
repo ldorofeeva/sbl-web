@@ -1,16 +1,37 @@
 const {validationResult} = require('express-validator');
 
 const HttpError = require('../models/http-error');
-const {find, findOne, insertOne, updateOne, deleteOne} = require('./mongo')
+const {find, findOne, insertOne, updateOne, deleteOne, aggregate} = require('./mongo')
 
 const collection = 'beers';
+
 
 const getAll = async (req, res, next) => {
     console.log('GET All ' + collection);
     let result;
     try {
-        result = await find(collection); // exec required for await - real promise
+        result = await aggregate(
+            collection,
+            [{
+                $lookup:
+                    {
+                        from: 'batches',
+                        localField: 'name',
+                        foreignField: 'beerName',
+                        as: 'batches'
+                    }
+                },
+                {
+                $project: {
+                    _id: 0,
+                    batches: {
+                        _id: 0,
+                    }
+                }
+            }]
+        );
     } catch (err) {
+        console.log(err)
         return next(new HttpError('Failed loading ' + collection, 500))
     }
     if (!result) {
@@ -25,7 +46,7 @@ const getItemByName = async (req, res, next) => {
     let result;
     console.log("Get one by name " + name)
     try {
-        result = await findOne(collection, {'name': name});
+        result = await findOne(collection, {'name': name}, {projection: {_id: 0}});
     } catch (err) {
         return next(new HttpError('Failed searching ' + collection, 500))
     }
@@ -33,6 +54,24 @@ const getItemByName = async (req, res, next) => {
         // trow to stop further execution
         return next(new HttpError('Could not find ' + name + ' in ' + collection, 404));
     }
+
+    let batches;
+    try {
+        batches = await find(
+            'batches',
+            {'beerName': name},
+            {projection:
+                    {
+                        _id: 0,
+                        'id': 1,
+                        'size': 1,
+                        'date': 1
+                    }
+            });
+    } catch (err) {
+        return next(new HttpError('Failed searching ' + collection, 500))
+    }
+    result.batches = batches
     res.json({result: result});
 };
 
@@ -69,13 +108,29 @@ const updateItemByName = async (req, res, next) => {
         result = await updateOne(collection, {'name': name}, {'$set': req.body})
     } catch (err) {
         console.log(err);
-        return next(new HttpError('Failed creating new in ' + collection, 500))
+        return next(new HttpError('Failed updating one in ' + collection, 500))
+    }
+    res.status(201).json({added: result});
+
+};
+
+const deleteItemByName = async (req, res, next) => {
+    const name = req.params.pid; // Same name as in get address
+    console.log('Delete ' + name + ' In ' + collection);
+
+    let result;
+    try {
+        result = await deleteOne(collection, {'title': name})
+    } catch (err) {
+        console.log(err);
+        return next(new HttpError('Failed deleting one in ' + collection, 500))
     }
     res.status(201).json({added: result});
 
 };
 
 exports.getAll = getAll;
+exports.getItemByName = getItemByName;
 exports.createNew = createNew;
 exports.updateItemByName = updateItemByName;
-exports.getItemByName = getItemByName;
+exports.deleteItemByName = deleteItemByName;
