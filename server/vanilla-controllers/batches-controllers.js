@@ -1,60 +1,27 @@
 const {validationResult} = require('express-validator');
 
 const HttpError = require('../models/http-error');
-const {find, findOne, insertOne, updateOne, deleteOne} = require('./mongo')
+const {find, findOne, insertOne} = require('./mongo')
+const {
+    findAllController, findManyController, findOneController, deleteOneController, updateOneController
+} = require('./simple-reusable-controllers')
 
-const collection = 'batches';
 
 
 const getAll = async (req, res, next) => {
-    console.log('GET All ' + collection);
-    let result;
-    try {
-        result = await find(collection, {}, {projection: {_id: 0}}); // exec required for await - real promise
-    } catch (err) {
-        return next(new HttpError('Failed loading ' + collection, 500))
-    }
-    if (!result) {
-        // trow to stop further execution
-        return next(new HttpError('No ' + collection + ' found', 404));
-    }
-    res.json(result);
+    return await findAllController('batches', req, res, next)
 };
 
 const getItemsByBeerName = async (req, res, next) => {
-    const beerName = req.params.pid; // Same name as in get address
-    let result;
-    console.log("Get one batch by id " + beerName)
-    try {
-        result = await find(collection, {'beerName': beerName}, {projection: {_id: 0}});
-    } catch (err) {
-        return next(new HttpError('Failed searching ' + collection, 500))
-    }
-    if (!result) {
-        // trow to stop further execution
-        return next(new HttpError('Could not find ' + beerName + ' in ' + collection, 404));
-    }
-    res.json({result: result});
+    return await findManyController('batches', 'beerName', req, res, next)
 };
 
 const getItemById = async (req, res, next) => {
-    const id = req.params.pid; // Same name as in get address
-    let result;
-    console.log("Get one batch by id " + id)
-    try {
-        result = await findOne(collection, {'id': id}, {projection: {_id: 0}});
-    } catch (err) {
-        return next(new HttpError('Failed searching ' + collection, 500))
-    }
-    if (!result) {
-        // trow to stop further execution
-        return next(new HttpError('Could not find ' + id + ' in ' + collection, 404));
-    }
-    res.json({result: result});
+    return await findOneController('batches', 'id', req, res, next)
 };
 
 const createNew = async (req, res, next) => {
-    console.log('CREATE In ' + collection);
+    console.log('CREATE In batches');
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         console.log(errors);
@@ -90,49 +57,22 @@ const createNew = async (req, res, next) => {
     newBatch.number = batchNumber
     let result;
     try {
-        result = await insertOne(collection, newBatch)
+        result = await insertOne('batches', newBatch)
     } catch (err) {
         console.log(err);
-        return next(new HttpError('Failed creating new in ' + collection, 500))
+        return next(new HttpError('Failed creating new in  batches', 500))
     }
     res.status(201).json({added: result});
 
 };
 
 const updateItemById = async (req, res, next) => {
-    const id = req.params.pid; // Same name as in get address
-    console.log('Update ' + id + ' In ' + collection);
-
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        console.log(errors);
-        return next(new HttpError('Invalid input', 422))
-    }
-
-    let result;
-    try {
-        result = await updateOne(collection, {'id': id}, {'$set': req.body})
-    } catch (err) {
-        console.log(err);
-        return next(new HttpError('Failed updating one in ' + collection, 500))
-    }
-    res.status(201).json({added: result});
+    return await updateOneController('batches', 'id', req, res, next)
 
 };
 
 const deleteItemById = async (req, res, next) => {
-    const id = req.params.pid; // Same name as in get address
-    console.log('Delete ' + id + ' In ' + collection);
-
-    let result;
-    try {
-        result = await deleteOne(collection, {'id': id})
-    } catch (err) {
-        console.log(err);
-        return next(new HttpError('Failed deleting one in ' + collection, 500))
-    }
-    res.status(201).json({added: result});
-
+    return await deleteOneController('batches', 'id', req, res, next)
 };
 
 exports.getAll = getAll;

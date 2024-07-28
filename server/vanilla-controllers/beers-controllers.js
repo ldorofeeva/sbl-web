@@ -1,17 +1,14 @@
-const {validationResult} = require('express-validator');
-
 const HttpError = require('../models/http-error');
-const {find, findOne, insertOne, updateOne, deleteOne, aggregate} = require('./mongo')
-
-const collection = 'beers';
+const {find, findOne, aggregate} = require('./mongo')
+const {deleteOneController, createNewController, updateOneController} = require('./simple-reusable-controllers')
 
 
 const getAll = async (req, res, next) => {
-    console.log('GET All ' + collection);
+    console.log('GET All ' + 'beers');
     let result;
     try {
         result = await aggregate(
-            collection,
+            'beers',
             [{
                 $lookup:
                     {
@@ -32,11 +29,11 @@ const getAll = async (req, res, next) => {
         );
     } catch (err) {
         console.log(err)
-        return next(new HttpError('Failed loading ' + collection, 500))
+        return next(new HttpError('Failed loading beers', 500))
     }
     if (!result) {
         // trow to stop further execution
-        return next(new HttpError('No ' + collection + ' found', 404));
+        return next(new HttpError('No beers found', 404));
     }
     res.json(result);
 };
@@ -46,13 +43,13 @@ const getItemByName = async (req, res, next) => {
     let result;
     console.log("Get one by name " + name)
     try {
-        result = await findOne(collection, {'name': name}, {projection: {_id: 0}});
+        result = await findOne('beers', {'name': name}, {projection: {_id: 0}});
     } catch (err) {
-        return next(new HttpError('Failed searching ' + collection, 500))
+        return next(new HttpError('Failed searching beers', 500))
     }
     if (!result) {
         // trow to stop further execution
-        return next(new HttpError('Could not find ' + name + ' in ' + collection, 404));
+        return next(new HttpError('Could not find ' + name + ' in beers', 404));
     }
 
     let batches;
@@ -69,64 +66,22 @@ const getItemByName = async (req, res, next) => {
                     }
             });
     } catch (err) {
-        return next(new HttpError('Failed searching ' + collection, 500))
+        return next(new HttpError('Failed searching ' + 'beers', 500))
     }
     result.batches = batches
     res.json({result: result});
 };
 
 const createNew = async (req, res, next) => {
-    console.log('CREATE In ' + collection);
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        console.log(errors);
-        return next(new HttpError('Invalid input', 422))
-    }
-    let result;
-    try {
-        result = await insertOne(collection, req.body)
-    } catch (err) {
-        console.log(err);
-        return next(new HttpError('Failed creating new in ' + collection, 500))
-    }
-    res.status(201).json({added: result});
-
+    return await createNewController('beers', req, res, next)
 };
 
 const updateItemByName = async (req, res, next) => {
-    const name = req.params.pid; // Same name as in get address
-    console.log('Update ' + name + ' In ' + collection);
-
-    const errors = validationResult(req);
-    if (!errors.isEmpty()) {
-        console.log(errors);
-        return next(new HttpError('Invalid input', 422))
-    }
-
-    let result;
-    try {
-        result = await updateOne(collection, {'name': name}, {'$set': req.body})
-    } catch (err) {
-        console.log(err);
-        return next(new HttpError('Failed updating one in ' + collection, 500))
-    }
-    res.status(201).json({added: result});
-
+    return await updateOneController('beers', 'name', req, res, next)
 };
 
 const deleteItemByName = async (req, res, next) => {
-    const name = req.params.pid; // Same name as in get address
-    console.log('Delete ' + name + ' In ' + collection);
-
-    let result;
-    try {
-        result = await deleteOne(collection, {'title': name})
-    } catch (err) {
-        console.log(err);
-        return next(new HttpError('Failed deleting one in ' + collection, 500))
-    }
-    res.status(201).json({added: result});
-
+    return await deleteOneController('beers', 'name', req, res, next)
 };
 
 exports.getAll = getAll;

@@ -7,6 +7,8 @@ const HttpError = require('./models/http-error');
 const usersRoutes = require('./routes/users-routes');
 const beersRoutes = require('./routes/beers-routes');
 const batchesRoutes = require('./routes/batches-routes');
+const hopsRoutes = require('./routes/hops-routes');
+const maltsRoutes = require('./routes/malts-routes');
 
 const app = express();
 
@@ -25,9 +27,11 @@ app.use((req, res, next)=>{
   next();
 });
 
-app.use('/api/users', usersRoutes); // => /api/users...
-app.use('/api/beers', beersRoutes); // => /api/users...
-app.use('/api/batches', batchesRoutes); // => /api/users...
+app.use('/api/users', usersRoutes); 
+app.use('/api/beers', beersRoutes); 
+app.use('/api/batches', batchesRoutes); 
+app.use('/api/hops', hopsRoutes);
+app.use('/api/malts', maltsRoutes);
 
 app.use((req, res, next) => {
   throw new HttpError('Could not find this route.', 404);
