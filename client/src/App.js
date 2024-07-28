@@ -5,11 +5,13 @@ import { BrowserRouter as Router, Route, Redirect, Switch} from 'react-router-do
 //import Users from "./users/pages/Users";
 import MainNavigation from "./shared/components/Navigation/MainNavigation";
 import UserPlaces from "./places/pages/UserPlaces";
-import NewPlace from "./places/pages/NewPlace";
-import UpdatePlace from "./places/pages/UpdatePlace";
+// import NewPlace from "./places/pages/NewPlace";
+import NewBeer from "./beers/pages/NewBeer"
+import UpdateBeer from "./beers/pages/UpdateBeer";
 import Auth from "./users/pages/Auth";
 import {AuthContext} from "./shared/context/auth-context";
 import LoadingSpinner from "./shared/components/UIElements/LoadingSpinner";
+import Beers from "./beers/pages/Beers"
 
 // Alternative to not load all at once, but only upon requirement/when rendering
 // Part 1 of 2
@@ -72,16 +74,13 @@ function App() {
         routes = (
             <Switch>
                 <Route path="/" exact>
-                    <Users/>
+                    <Beers/>
                 </Route>
-                <Route path="/:uId/places" exact>
-                    <UserPlaces/>
+                <Route path="/beers/new" exact>
+                    <NewBeer/>
                 </Route>
-                <Route path="/places/new" exact>
-                    <NewPlace/>
-                </Route>
-                <Route path="/places/:placeId" exact>
-                    <UpdatePlace/>
+                <Route path="/beers/:beerId" exact>
+                    <UpdateBeer/>
                 </Route>
                 <Redirect to={"/"}/>
             </Switch>
@@ -90,13 +89,10 @@ function App() {
         routes = (
             <Switch>
                 <Route path="/" exact>
-                    <Users/>
+                    <Beers/>
                 </Route>
                 <Route path="/auth" exact>
                     <Auth/>
-                </Route>
-                <Route path="/:uId/places" exact>
-                    <UserPlaces/>
                 </Route>
                 <Redirect to={"/auth"}/>
             </Switch>

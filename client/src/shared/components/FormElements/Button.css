@@ -32,6 +32,18 @@
   background: #6836b5;
 }
 
+.button--nice {
+  color: black;
+  background: #f8df00;
+  border-color: #984bff;
+}
+
+.button--nice:hover,
+.button--nice:active {
+  background: #fff982;
+  border-color: #984bff;
+}
+
 .button--danger {
   background: #830000;
   border-color: #830000;

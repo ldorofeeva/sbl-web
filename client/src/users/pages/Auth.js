@@ -20,7 +20,7 @@ import ImageUpload from "../../shared/components/FormElements/ImageUpload";
 const Auth = () => {
     const auth = useContext(AuthContext);
     const [isLoginMode, setIsLoginMode] = useState(true);
-
+    // const isLoginMode = true;
     const [formState, inputHandler, setFormData] = useForm(
         {
             email: {
@@ -53,10 +53,6 @@ const Auth = () => {
                     name: {
                         value: '',
                         isValid: false
-                    },
-                    image: {
-                        value: null,
-                        isValid: false
                     }
                 },
                 false
@@ -83,14 +79,13 @@ const Auth = () => {
             } catch(err) {
                 console.log(err);
             }
-        } else {
+        }
+        else {
             try {
                 const formData = new FormData();
-                console.log(formState.inputs.image.value);
                 formData.append('name', formState.inputs.name.value);
                 formData.append('email', formState.inputs.email.value);
                 formData.append('password', formState.inputs.password.value);
-                formData.append('image', formState.inputs.image.value);
                 const responseData = await sendRequest(
                     `${process.env.REACT_APP_BACKEND_URL}/users/signup`,
                     'POST',
@@ -123,13 +118,13 @@ const Auth = () => {
                             onInput={inputHandler}
                         />
                     )}
-                    {!isLoginMode && (
-                        <ImageUpload
-                            center id={"image"}
-                            onInput={inputHandler}
-                            errorText="Please provide an image."
-                        />
-                    )}
+                    {/*{!isLoginMode && (*/}
+                    {/*    <ImageUpload*/}
+                    {/*        center id={"image"}*/}
+                    {/*        onInput={inputHandler}*/}
+                    {/*        errorText="Please provide an image."*/}
+                    {/*    />*/}
+                    {/*)}*/}
                     <Input
                         element="input"
                         id="email"
@@ -148,17 +143,6 @@ const Auth = () => {
                         errorText="Please enter a valid password, at least 5 characters."
                         onInput={inputHandler}
                     />
-                    {/*{!isLoginMode && (*/}
-                    {/*    <Input*/}
-                    {/*        element="input"*/}
-                    {/*        id="imageUrl"*/}
-                    {/*        type="text"*/}
-                    {/*        label="Image URL"*/}
-                    {/*        validators={[]}*/}
-                    {/*        errorText="Please enter an image URL."*/}
-                    {/*        onInput={inputHandler}*/}
-                    {/*    />*/}
-                    {/*)}*/}
                     <Button type="submit" disabled={!formState.isValid}>
                         {isLoginMode ? 'LOGIN' : 'SIGNUP'}
                     </Button>

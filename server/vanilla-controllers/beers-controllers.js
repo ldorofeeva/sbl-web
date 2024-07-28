@@ -69,7 +69,7 @@ const getItemByName = async (req, res, next) => {
         return next(new HttpError('Failed searching ' + 'beers', 500))
     }
     result.batches = batches
-    res.json({result: result});
+    res.json(result);
 };
 
 const createNew = async (req, res, next) => {
