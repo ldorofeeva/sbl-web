@@ -28,6 +28,7 @@ const BeerList = props => {
                 name={beer.name}
                 hops={beer.hops}
                 malts={beer.malts}
+                batches={beer.batches.length}
                 onDelete={props.onDelete}
             />
         })}

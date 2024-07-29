@@ -68,8 +68,9 @@ const BeerItem = props => {
                 <Card className="item__content">
                     <div className="item__info">
                         <h2>{props.name}</h2>
-                        <h3>{props.hops}</h3>
-                        <p>{props.malts}</p>
+                        <h3># Batches: {props.batches}</h3>
+                        <p>Hops: {props.hops.toString()}</p>
+                        <p>Malts: {props.malts.toString()}</p>
                     </div>
                     <div className="item__actions">
                         <Button nice to={`/beers/${props.name}/details`}>DETAILS</Button>
@@ -77,7 +78,6 @@ const BeerItem = props => {
                         {auth.isLoggedIn && <Button danger onClick={openConfirmHandler}>DELETE</Button>}
                     </div>
                 </Card>
-
             </li>
         </React.Fragment>
     )

@@ -10,9 +10,11 @@ import Auth from "./users/pages/Auth";
 import {AuthContext} from "./shared/context/auth-context";
 import LoadingSpinner from "./shared/components/UIElements/LoadingSpinner";
 import Beers from "./beers/pages/Beers"
+import BeerDetails from "./beers/pages/BeerDetails"
 import Batches from "./batches/pages/Batches"
 import NewBatch from "./batches/pages/NewBatch"
 import UpdateBatch from "./batches/pages/UpdateBatch"
+import BatchDetails from "./batches/pages/BatchDetails"
 
 // Alternative to not load all at once, but only upon requirement/when rendering
 // Part 1 of 2
@@ -86,11 +88,17 @@ function App() {
                 <Route path="/batches/:batchId" exact>
                     <UpdateBatch/>
                 </Route>
+                <Route path="/batches/:batchId/details" exact>
+                    <BatchDetails/>
+                </Route>
                 <Route path="/beers/new" exact>
                     <NewBeer/>
                 </Route>
                 <Route path="/beers/:beerId" exact>
                     <UpdateBeer/>
+                </Route>
+                <Route path="/beers/:beerId/details" exact>
+                    <BeerDetails/>
                 </Route>
                 <Redirect to={"/"}/>
             </Switch>
@@ -101,13 +109,19 @@ function App() {
                 <Route path="/" exact>
                     <Beers/>
                 </Route>
+                <Route path="/beers/:beerId/details" exact>
+                    <BeerDetails/>
+                </Route>
                 <Route path="/batches" exact>
                     <Batches/>
+                </Route>
+                <Route path="/batches/:batchId/details" exact>
+                    <BatchDetails/>
                 </Route>
                 <Route path="/auth" exact>
                     <Auth/>
                 </Route>
-                <Redirect to={"/auth"}/>
+                <Redirect to={"/"}/>
             </Switch>
         );
     }

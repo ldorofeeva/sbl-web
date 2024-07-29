@@ -25,10 +25,6 @@ router.post(
 
 router.patch(
     '/:pid',
-    [
-        check('beerName').not().isEmpty(),
-        check('beerName').isLength({min: 3, max: 120}),
-    ],
     BatchesController.updateItemById
 );
 
