@@ -9,25 +9,19 @@ const NavLinks = props => {
         <li>
             <NavLink to="/" exact>BEERS</NavLink>
         </li>
-        {/*{auth.isLoggedIn &&*/}
-        {/*<li>*/}
-        {/*    <NavLink to={`/beers`}>MY PLACES</NavLink>*/}
-        {/*</li>*/}
-        {/*}*/}
-        {auth.isLoggedIn &&
         <li>
-            <NavLink to="/beers/new">ADD BEER</NavLink>
+            <NavLink to="/batches" exact>BATCHES</NavLink>
         </li>
-        }
+
         {!auth.isLoggedIn &&
-        <li>
-            <NavLink to="/auth">AUTHENTICATE</NavLink>
-        </li>
+            <li>
+                <NavLink to="/auth">AUTHENTICATE</NavLink>
+            </li>
         }
         {auth.isLoggedIn &&
-        <li>
-            <button onClick={auth.logout}>LOGOUT</button>
-        </li>
+            <li>
+                <button onClick={auth.logout}>LOGOUT</button>
+            </li>
         }
     </ul>
 };

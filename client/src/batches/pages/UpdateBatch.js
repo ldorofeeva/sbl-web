@@ -7,7 +7,6 @@ import {useHttpClient} from "../../shared/hooks/http-hook";
 import {useGetter} from "../../shared/hooks/getters-hook";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
-import uiSchema from "../../shared/components/UIElements/UISchemas"
 import {AuthContext} from "../../shared/context/auth-context";
 
 import {withTheme} from '@rjsf/core';
@@ -16,26 +15,45 @@ import validator from '@rjsf/validator-ajv8';
 
 const Form = withTheme(Bootstrap4Theme);
 
-const UpdateBeer = () => {
-    const beerId = useParams().beerId;
+const UpdateBatch = () => {
+    const batchId = useParams().batchId;
 
     const auth = useContext(AuthContext);
     const history = useHistory();
 
     const {isLoading, error, sendRequest, clearError} = useHttpClient();
-    const {beerSchema} = useGetter();
+    const {batchSchema} = useGetter();
 
     const [formData, setFormData] = useState(null);
     const [submitted, setSubmitted] = useState(false);
 
 
-    const [identifiedBeer, setIdentifiedBeer] = useState();
+    const uiSchema = {
+        "ui:options": {
+            "title": "Edit batch",
+            "classNames": "form form-group form-control",
+        },
+        'ui:globalOptions': {copyable: true},
+        'ui:style': {
+            'html': {
+                'font-family': "'Open Sans', sans-serif"
+            }
+        },
+        'title': {
+            "classNames": "input"
+        },
+    }
+    const [identifiedBatch, setIdentifiedBatch] = useState();
+
+    const {properties} = batchSchema
+    const {beerName, number, ...batchUpdateProperties} = properties
+    batchSchema.properties = batchUpdateProperties
 
     useEffect(() => {
-        const getBeers = async () => {
+        const getBatches = async () => {
             try {
                 const responseData = await sendRequest(
-                    `${process.env.REACT_APP_BACKEND_URL}/beers/${beerId}`,
+                    `${process.env.REACT_APP_BACKEND_URL}/batches/${batchId}`,
                     "GET",
                     null,
                     {
@@ -43,22 +61,22 @@ const UpdateBeer = () => {
                     }
                 );
                 console.log(responseData);
-                console.log(responseData.name)
-                setIdentifiedBeer(responseData.name);
-                const {batches, ...beerDetails} = responseData
-                setFormData(beerDetails);
+                console.log(responseData.id)
+                setIdentifiedBatch(responseData.id);
+                const {id, beerName, number, ...batchDetails} = responseData
+                setFormData(batchDetails);
             } catch(err) {
                 console.log(err);
             }
         };
-        getBeers();
-    }, [sendRequest, beerId, setFormData]);
+        getBatches();
+    }, [sendRequest, batchId, setFormData]);
 
-    const beerSubmitHandler = async event => {
+    const batchSubmitHandler = async event => {
         console.log(formData)
         try {
             const responseData = await sendRequest(
-                `${process.env.REACT_APP_BACKEND_URL}/beers/${beerId}`,
+                `${process.env.REACT_APP_BACKEND_URL}/batches/${batchId}`,
                 'PATCH',
                 JSON.stringify(formData),
                 {
@@ -70,18 +88,18 @@ const UpdateBeer = () => {
                 setSubmitted(true)
             }
             console.log(responseData);
-            history.push(`/beers`);
+            history.push(`/batches`);
         } catch (err) {
             console.log(err);
         }
     };
 
 
-    if (!identifiedBeer && !error) {
+    if (!identifiedBatch && !error) {
         return (
             <div className="center">
                 <Card>
-                    <h2>Could not find beer {beerId}!</h2>
+                    <h2>Could not find batch {batchId}!</h2>
                 </Card>
             </div>
         );
@@ -96,11 +114,11 @@ const UpdateBeer = () => {
                 </div>)}
             {!submitted && !isLoading && !error &&
                 <Form
-                    schema={beerSchema}
+                    schema={batchSchema}
                     uiSchema={uiSchema}
                     formData={formData}
                     onChange={(e) => setFormData(e.formData)}
-                    onSubmit={beerSubmitHandler}
+                    onSubmit={batchSubmitHandler}
                     validator={validator}
                 />}
             {submitted && !isLoading &&
@@ -114,4 +132,4 @@ const UpdateBeer = () => {
     );
 };
 
-export default UpdateBeer;
+export default UpdateBatch;

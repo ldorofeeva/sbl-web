@@ -1,8 +1,7 @@
 // So the we could use JSX
 import React, {useState, useContext} from 'react';
 
-import "./BeerItem.css"
-
+import "../../shared/components/UIElements/Item.css"
 import Card from "../../shared/components/UIElements/Card";
 import Button from "../../shared/components/FormElements/Button";
 import Modal from "../../shared/components/UIElements/Modal";
@@ -54,8 +53,8 @@ const BeerItem = props => {
                 show={showConfirm}
                 onCancel={closeConfirmHandler}
                 header={"Are you sure?"}
-                contentCalss="place-item__modal-content"
-                footerClass="place-item__modal-actions"
+                contentCalss="item__modal-content"
+                footerClass="item__modal-actions"
                 footer={
                     <React.Fragment>
                         <Button inverse onClick={closeConfirmHandler}>CANCEL</Button>
@@ -65,20 +64,18 @@ const BeerItem = props => {
             >
                 <p>Do you want to delete?</p>
             </Modal>
-            <li className="place-item">
-                <Card className="place-item__content">
-                    {/*<Link to={`/${props.id}`}>*/}
-                    <div className="place-item__info">
+            <li className="item">
+                <Card className="item__content">
+                    <div className="item__info">
                         <h2>{props.name}</h2>
                         <h3>{props.hops}</h3>
                         <p>{props.malts}</p>
                     </div>
-                    <div className="place-item__actions">
+                    <div className="item__actions">
                         <Button nice to={`/beers/${props.name}/details`}>DETAILS</Button>
                         {auth.isLoggedIn && <Button to={`/beers/${props.name}`}>EDIT</Button>}
                         {auth.isLoggedIn && <Button danger onClick={openConfirmHandler}>DELETE</Button>}
                     </div>
-                    {/*</Link>*/}
                 </Card>
 
             </li>

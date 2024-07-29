@@ -10,8 +10,6 @@ import {AuthContext} from "../../shared/context/auth-context";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 
-import uiSchema from "../../shared/components/UIElements/UISchemas"
-
 import {withTheme} from '@rjsf/core';
 import {Theme as Bootstrap4Theme} from '@rjsf/bootstrap-4';
 import validator from '@rjsf/validator-ajv8';
@@ -20,20 +18,37 @@ import Card from "../../shared/components/UIElements/Card";
 const Form = withTheme(Bootstrap4Theme);
 
 
-const NewBeer = () => {
+const NewBatch = () => {
     const auth = useContext(AuthContext);
 
     const { isLoading, error, sendRequest, clearError } = useHttpClient();
-    const {beerSchema} = useGetter();
+    const {batchSchema} = useGetter();
     const history = useHistory();
     const [formData, setFormData] = useState(null);
     const [submitted, setSubmitted] = useState(false);
 
-    const beerSubmitHandler = async event => {
+    const uiSchema = {
+        "ui:options": {
+            "title": "Add a new batch",
+            "classNames": "form form-group form-control",
+        },
+        'ui:globalOptions': {copyable: true},
+        'ui:style': {
+            'html': {
+                'font-family': "'Open Sans', sans-serif"
+            }
+        },
+        'title': {
+            "classNames": "input"
+        },
+    }
+
+
+    const batchSubmitHandler = async event => {
         console.log(formData)
         try {
             const responseData = await sendRequest(
-                `${process.env.REACT_APP_BACKEND_URL}/beers`,
+                `${process.env.REACT_APP_BACKEND_URL}/batches`,
                 'POST',
                 JSON.stringify(formData),
                 {
@@ -45,7 +60,7 @@ const NewBeer = () => {
                 setSubmitted(true)
             }
             console.log(responseData);
-            history.push(`/beers`);
+            history.push(`/batches`);
         } catch(err) {
             console.log(err);
         }
@@ -60,11 +75,11 @@ const NewBeer = () => {
                 </div>)}
             {!submitted && !isLoading && !error &&
             <Form
-                schema={beerSchema}
+                schema={batchSchema}
                 uiSchema={uiSchema}
                 formData={formData}
                 onChange={(e) => setFormData(e.formData)}
-                onSubmit={beerSubmitHandler}
+                onSubmit={batchSubmitHandler}
                 validator={validator}
             />}
             {submitted && !isLoading &&
@@ -78,4 +93,4 @@ const NewBeer = () => {
     );
 };
 
-export default NewBeer;
+export default NewBatch;

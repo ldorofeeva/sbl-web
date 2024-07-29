@@ -4,7 +4,7 @@
   display: list-item;
 }
 
-.place-form {
+.form {
   list-style: none;
   margin: 0 auto;
   padding: 1rem;
@@ -27,7 +27,7 @@
   margin-outside: 10rem;
   text-decoration: none;
   display: inline-block;
-  align-content: center;
+  align-self: center;
 }
 
 .btn:focus {

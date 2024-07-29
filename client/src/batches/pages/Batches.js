@@ -1,5 +1,5 @@
 import React, {useContext, useState, useEffect} from 'react';
-import BeerList from "../components/BeerList";
+import BatchList from "../components/BatchList";
 
 import Button from "../../shared/components/FormElements/Button";
 
@@ -9,37 +9,37 @@ import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 
 
-const Beers = () => {
+const Batches = () => {
     const auth = useContext(AuthContext);
 
-    const [loadedBeers, setLoadedBeers] = useState([]);
+    const [loadedBatches, setLoadedBatches] = useState([]);
 
     const {isLoading, error, sendRequest, clearError} = useHttpClient();
     useEffect(() => {
-        const getBeers = async () => {
+        const getBatches = async () => {
             try {
                 const responseData = await sendRequest(
-                    `${process.env.REACT_APP_BACKEND_URL}/beers`
+                    `${process.env.REACT_APP_BACKEND_URL}/batches`
                 );
                 console.log(responseData);
 
-                setLoadedBeers(responseData);
+                setLoadedBatches(responseData);
             } catch (err) {
                 console.log(err);
 
             }
         };
-        getBeers();
-    }, [sendRequest, setLoadedBeers]);
+        getBatches();
+    }, [sendRequest, setLoadedBatches]);
 
-    const beerDeletedHandler = deletedBeerName => {
-        setLoadedBeers(prevLoadedBeers => {
-                console.log("Prev Loaded Beers");
-                console.log(prevLoadedBeers);
-                return prevLoadedBeers.filter(beer => beer.name !== deletedBeerName)
+    const batchDeletedHandler = deletedBatchId => {
+        setLoadedBatches(prevLoadedBatches => {
+                console.log("Prev Loaded Batches");
+                console.log(prevLoadedBatches);
+                return prevLoadedBatches.filter(batch => batch.id !== deletedBatchId)
             }
         );
-        console.log(loadedBeers)
+        console.log(loadedBatches)
     };
 
     return (
@@ -49,16 +49,16 @@ const Beers = () => {
                 <div className="center">
                     <LoadingSpinner asOverlay/>
                 </div>)}
-            {loadedBeers &&
-                <BeerList items={loadedBeers} onDelete={beerDeletedHandler}/>
+            {loadedBatches &&
+                <BatchList items={loadedBatches} onDelete={batchDeletedHandler}/>
             }
             {auth.isLoggedIn &&
             <div className="center">
-                <Button nice to={`/beers/new`}>NEW</Button>
+                <Button nice to={`/batches/new`}>NEW</Button>
             </div>
             }
         </React.Fragment>
 );
 };
 
-export default Beers;
+export default Batches;
