@@ -4,7 +4,7 @@ const router = express.Router();
 
 const BatchesController = require('../vanilla-controllers/batches-controllers');
 
-// const checkAuth = require('../middleware/check-auth');
+const checkAuth = require('../middleware/check-auth');
 
 router.get('/', BatchesController.getAll);
 
@@ -12,7 +12,7 @@ router.get('/:pid', BatchesController.getItemById);
 
 router.get('/beer/:pid', BatchesController.getItemsByBeerName);
 
-// router.use(checkAuth);
+router.use(checkAuth);
 
 router.post(
     '/',

@@ -4,11 +4,11 @@ const router = express.Router();
 
 const MaltsController = require('../vanilla-controllers/malts-controllers');
 
-// const checkAuth = require('../middleware/check-auth');
+const checkAuth = require('../middleware/check-auth');
 
 router.get('/', MaltsController.getAll);
 
-// router.use(checkAuth);
+router.use(checkAuth);
 
 router.post(
     '/',

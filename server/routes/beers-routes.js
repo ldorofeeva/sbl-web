@@ -5,13 +5,13 @@ const router = express.Router();
 const BeersController = require('../vanilla-controllers/beers-controllers');
 // const fileUpload = require('../middleware/file-upload');
 
-// const checkAuth = require('../middleware/check-auth');
+const checkAuth = require('../middleware/check-auth');
 
 router.get('/', BeersController.getAll);
 
 router.get('/:pid', BeersController.getItemByName);
 
-// router.use(checkAuth);
+router.use(checkAuth);
 
 router.post(
     '/',

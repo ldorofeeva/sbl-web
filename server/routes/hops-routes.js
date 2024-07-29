@@ -4,11 +4,11 @@ const router = express.Router();
 
 const HopsController = require('../vanilla-controllers/hops-controllers');
 
-// const checkAuth = require('../middleware/check-auth');
+const checkAuth = require('../middleware/check-auth');
 
 router.get('/', HopsController.getAll);
 
-// router.use(checkAuth);
+router.use(checkAuth);
 
 router.post(
     '/',
