@@ -15,6 +15,8 @@ import Batches from "./batches/pages/Batches"
 import NewBatch from "./batches/pages/NewBatch"
 import UpdateBatch from "./batches/pages/UpdateBatch"
 import BatchDetails from "./batches/pages/BatchDetails"
+import Items from "./simple-lists/pages/Items"
+import NewItem from "./simple-lists/pages/NewItem"
 
 // Alternative to not load all at once, but only upon requirement/when rendering
 // Part 1 of 2
@@ -100,6 +102,18 @@ function App() {
                 <Route path="/beers/:beerId/details" exact>
                     <BeerDetails/>
                 </Route>
+                <Route path="/malts" exact>
+                    <Items key="malts" endpoint={"malts"}/>
+                </Route>
+                <Route path="/malts/new" exact>
+                    <NewItem key="newmalt" endpoint={"malts"}/>
+                </Route>
+                <Route path="/hops" exact>
+                    <Items key="hops" endpoint={"hops"}/>
+                </Route>
+                <Route path="/hops/new" exact>
+                    <NewItem key="newhop" endpoint={"hops"}/>
+                </Route>
                 <Redirect to={"/"}/>
             </Switch>
         );
@@ -117,6 +131,9 @@ function App() {
                 </Route>
                 <Route path="/batches/:batchId/details" exact>
                     <BatchDetails/>
+                </Route>
+                <Route path="/malts" exact>
+                    <Items endpoint={"malts"}/>
                 </Route>
                 <Route path="/auth" exact>
                     <Auth/>

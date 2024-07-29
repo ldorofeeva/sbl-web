@@ -97,7 +97,7 @@ const UpdateBeer = () => {
             {!submitted && !isLoading && !error &&
                 <Form
                     schema={beerSchema}
-                    uiSchema={uiSchema}
+                    uiSchema={uiSchema("Edit beer")}
                     formData={formData}
                     onChange={(e) => setFormData(e.formData)}
                     onSubmit={beerSubmitHandler}

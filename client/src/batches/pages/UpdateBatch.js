@@ -1,6 +1,7 @@
 import React, {useEffect, useState, useContext} from 'react';
 import { useParams, useHistory } from 'react-router-dom';
 
+import uiSchema from "../../shared/components/UIElements/UISchemas"
 import "../../shared/components/UIElements/Form.css"
 import Card from "../../shared/components/UIElements/Card";
 import {useHttpClient} from "../../shared/hooks/http-hook";
@@ -27,22 +28,6 @@ const UpdateBatch = () => {
     const [formData, setFormData] = useState(null);
     const [submitted, setSubmitted] = useState(false);
 
-
-    const uiSchema = {
-        "ui:options": {
-            "title": "Edit batch",
-            "classNames": "form form-group form-control",
-        },
-        'ui:globalOptions': {copyable: true},
-        'ui:style': {
-            'html': {
-                'font-family': "'Open Sans', sans-serif"
-            }
-        },
-        'title': {
-            "classNames": "input"
-        },
-    }
     const [identifiedBatch, setIdentifiedBatch] = useState();
 
     const {properties} = batchSchema
@@ -115,7 +100,7 @@ const UpdateBatch = () => {
             {!submitted && !isLoading && !error &&
                 <Form
                     schema={batchSchema}
-                    uiSchema={uiSchema}
+                    uiSchema={uiSchema("Edit batch")}
                     formData={formData}
                     onChange={(e) => setFormData(e.formData)}
                     onSubmit={batchSubmitHandler}

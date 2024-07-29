@@ -10,6 +10,7 @@ import {AuthContext} from "../../shared/context/auth-context";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 
+import uiSchema from "../../shared/components/UIElements/UISchemas"
 import {withTheme} from '@rjsf/core';
 import {Theme as Bootstrap4Theme} from '@rjsf/bootstrap-4';
 import validator from '@rjsf/validator-ajv8';
@@ -26,23 +27,6 @@ const NewBatch = () => {
     const history = useHistory();
     const [formData, setFormData] = useState(null);
     const [submitted, setSubmitted] = useState(false);
-
-    const uiSchema = {
-        "ui:options": {
-            "title": "Add a new batch",
-            "classNames": "form form-group form-control",
-        },
-        'ui:globalOptions': {copyable: true},
-        'ui:style': {
-            'html': {
-                'font-family': "'Open Sans', sans-serif"
-            }
-        },
-        'title': {
-            "classNames": "input"
-        },
-    }
-
 
     const batchSubmitHandler = async event => {
         console.log(formData)
@@ -76,7 +60,7 @@ const NewBatch = () => {
             {!submitted && !isLoading && !error &&
             <Form
                 schema={batchSchema}
-                uiSchema={uiSchema}
+                uiSchema={uiSchema("Add a new batch")}
                 formData={formData}
                 onChange={(e) => setFormData(e.formData)}
                 onSubmit={batchSubmitHandler}

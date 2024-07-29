@@ -5,7 +5,6 @@ import '../../shared/components/UIElements/Form.css';
 import '../../shared/components/FormElements/Button.css'
 import '../../shared/components/FormElements/Input.css'
 import {useHttpClient} from "../../shared/hooks/http-hook";
-import {useGetter} from "../../shared/hooks/getters-hook";
 import {AuthContext} from "../../shared/context/auth-context";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
@@ -20,20 +19,30 @@ import Card from "../../shared/components/UIElements/Card";
 const Form = withTheme(Bootstrap4Theme);
 
 
-const NewBeer = () => {
+const NewItem = props => {
+    const simpleSchema = {
+        type: 'object',
+        properties: {
+            name: {
+                type: 'string',
+                title: 'Name'
+            }
+        }
+    }
+
     const auth = useContext(AuthContext);
 
-    const { isLoading, error, sendRequest, clearError } = useHttpClient();
-    const {beerSchema} = useGetter();
+    const {isLoading, error, sendRequest, clearError} = useHttpClient();
+
     const history = useHistory();
     const [formData, setFormData] = useState(null);
     const [submitted, setSubmitted] = useState(false);
 
-    const beerSubmitHandler = async event => {
+    const itemSubmitHandler = async event => {
         console.log(formData)
         try {
             const responseData = await sendRequest(
-                `${process.env.REACT_APP_BACKEND_URL}/beers`,
+                `${process.env.REACT_APP_BACKEND_URL}/${props.endpoint}`,
                 'POST',
                 JSON.stringify(formData),
                 {
@@ -45,8 +54,8 @@ const NewBeer = () => {
                 setSubmitted(true)
             }
             console.log(responseData);
-            history.push(`/beers`);
-        } catch(err) {
+            history.push(`/${props.endpoint}`);
+        } catch (err) {
             console.log(err);
         }
     };
@@ -59,14 +68,14 @@ const NewBeer = () => {
                     <LoadingSpinner asOverlay/>
                 </div>)}
             {!submitted && !isLoading && !error &&
-            <Form
-                schema={beerSchema}
-                uiSchema={uiSchema("Add a new beer")}
-                formData={formData}
-                onChange={(e) => setFormData(e.formData)}
-                onSubmit={beerSubmitHandler}
-                validator={validator}
-            />}
+                <Form
+                    schema={simpleSchema}
+                    uiSchema={uiSchema(`Add new item to ${props.endpoint}`)}
+                    formData={formData}
+                    onChange={(e) => setFormData(e.formData)}
+                    onSubmit={itemSubmitHandler}
+                    validator={validator}
+                />}
             {submitted && !isLoading &&
                 <div className="center">
                     <Card>
@@ -78,4 +87,4 @@ const NewBeer = () => {
     );
 };
 
-export default NewBeer;
+export default NewItem;
