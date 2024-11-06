@@ -10,7 +10,10 @@ const uiSchema  = (title) => {
             'html': {
                 'font-family': "'Open Sans', sans-serif"
             }
-        }
+        },
+        "notes": {
+            "ui:widget": "textarea"
+        },
     }
 }
 
